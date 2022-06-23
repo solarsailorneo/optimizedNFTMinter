@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+import { ethers, BigNumber } from 'ethers';
 
 import { contractABI, contractAddress } from '../utils/constants';
 
@@ -12,11 +12,8 @@ const getEthereumContract = () => {
     const signer = provider.getSigner();
     const ERC721aContract = new ethers.Contract(contractAddress, contractABI, signer);
 
-    console.log({
-        provider,
-        signer,
-        ERC721aContract
-    })
+    console.log(ERC721aContract);
+    return ERC721aContract;
 }
 
 
@@ -72,14 +69,34 @@ export const ERC721aProvider = ({ children }) => {
         }
     }
 
-    const sendMint = () => {
+    const sendMint = async () => {
         try {
             if(!ethereum) return alert("Please install metamask");
 
             // get data from form
             const { quantity, baseURI } = formData;
             console.log(quantity);
-            getEthereumContract();
+            const erc721aContract = getEthereumContract();
+
+            // await ethereum.request({
+            //     method: 'mint',
+            //     params: [{
+            //         quantity: quantity,
+            //         gas: '0x5208' // 21000 GWEI
+            //     }]
+            // });
+
+            const transactionHash1 = await erc721aContract.setBaseURI(baseURI.toString());
+            const transactionHash2 = await erc721aContract.mint(BigNumber.from(quantity));
+            // const transactionHash2 = await erc721aContract.mint(BigNumber.from(quantity), {value: ethers.utils.parseEther(quantity * 0.02).toString()});
+            // const transactionHash3 = await erc721aContract.totalSupply();
+
+            console.log(transactionHash1);
+            console.log(transactionHash2);
+            // console.log(transactionHash3);
+
+            // const transactionHash3 = await erc721aContract.totalSupply();
+            // console.log(transactionHash3);
 
         }
         catch (error) {
