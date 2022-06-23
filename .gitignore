@@ -2,3 +2,4 @@ smart_contracts/package-lock.json
 smart_contracts/node_modules
 smart_contracts/artifacts
 smart_contracts/cache
+smart_contracts/docs/.nojekyll
