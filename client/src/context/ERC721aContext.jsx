@@ -15,7 +15,7 @@ const getEthereumContract = () => {
     console.log({
         provider,
         signer,
-        transactionContract
+        ERC721aContract
     })
 }
 
@@ -78,6 +78,7 @@ export const ERC721aProvider = ({ children }) => {
 
             // get data from form
             const { quantity, baseURI } = formData;
+            console.log(quantity);
             getEthereumContract();
 
         }
