@@ -22,15 +22,48 @@ const getEthereumContract = () => {
 
 
 export const ERC721aProvider = ({ children }) => {
-    const [connectedAccount, setConnectedAccount] = useState('');
+    const [currentAccount, setCurrentAccount] = useState('');
 
 
     const checkIfWalletIsConnected = async () => {
-        if(!ethereum) return alert("Please install metamask");
+        try {
+            if(!ethereum) return alert("Please install metamask");
 
-        const accounts = await ethereum.request({ method: 'eth_accounts' });
+            const accounts = await ethereum.request({ method: 'eth_accounts' });
 
-        console.log(accounts);
+            if(accounts.length)
+            {
+                setCurrentAccount(accounts[0]);
+                console.log('Succesfully connected');
+                // getAllTransactions
+            }
+            else{
+                console.log('No accounts found');
+            }
+        }
+        catch (error)
+        {
+            console.log(error);
+
+            throw new Error("No ethereum object");
+
+        } 
+
+    }
+
+    const mint = async () => {
+        try {
+            if(!ethereum) return alert("Please install metamask");
+
+            // get data from form
+
+        }
+        catch (error) {
+            console.log(error);
+
+            throw new Error("No ethereum object");
+
+        }
     }
 
     const connectWallet = async () => {
@@ -49,9 +82,13 @@ export const ERC721aProvider = ({ children }) => {
 
         }
     }
+
+    useEffect(() => {
+        checkIfWalletIsConnected();
+    }, [currentAccount]);
     
     return (
-        <ERC721aContext.Provider value={{ connectWallet }}>
+        <ERC721aContext.Provider value={{ connectWallet, currentAccount }}>
             {children}
         </ERC721aContext.Provider>
     );
