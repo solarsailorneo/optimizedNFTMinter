@@ -23,8 +23,12 @@ const getEthereumContract = () => {
 
 export const ERC721aProvider = ({ children }) => {
     const [currentAccount, setCurrentAccount] = useState('');
+    const [formData, setFormData] = useState({quantity: '', baseURI: ''});
 
-
+    const handleChange = (e, name) => {
+        setFormData((prevState) => ({ ...prevState, [name]: e.target.value }));
+    }
+    
     const checkIfWalletIsConnected = async () => {
         try {
             if(!ethereum) return alert("Please install metamask");
@@ -51,21 +55,6 @@ export const ERC721aProvider = ({ children }) => {
 
     }
 
-    const mint = async () => {
-        try {
-            if(!ethereum) return alert("Please install metamask");
-
-            // get data from form
-
-        }
-        catch (error) {
-            console.log(error);
-
-            throw new Error("No ethereum object");
-
-        }
-    }
-
     const connectWallet = async () => {
         try {
             if(!ethereum) return alert("Please install metamask");
@@ -83,12 +72,29 @@ export const ERC721aProvider = ({ children }) => {
         }
     }
 
+    const sendMint = () => {
+        try {
+            if(!ethereum) return alert("Please install metamask");
+
+            // get data from form
+            const { quantity, baseURI } = formData;
+            getEthereumContract();
+
+        }
+        catch (error) {
+            console.log(error);
+
+            throw new Error("No ethereum object");
+
+        }
+    }
+
     useEffect(() => {
         checkIfWalletIsConnected();
     }, [currentAccount]);
     
     return (
-        <ERC721aContext.Provider value={{ connectWallet, currentAccount }}>
+        <ERC721aContext.Provider value={{ connectWallet, currentAccount, formData, setFormData, handleChange, sendMint }}>
             {children}
         </ERC721aContext.Provider>
     );
