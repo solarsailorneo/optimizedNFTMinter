@@ -5,6 +5,7 @@ import { SiEthereum } from 'react-icons/si';
 import { BsInfoCircle } from 'react-icons/bs';
 
 import { Loader } from './';
+import { shortenAddress } from '../utils/shortenAddress';
 
 const commonStyles = "min-h-[70px] sm:px-0 px-2 sm-min-w-[120px] flex justify-center items-center border-[0.5px] border-gradient"
 
@@ -63,7 +64,7 @@ const Welcome = () => {
                         </div>
                         <div>
                             <p className="text-white font-light text-sm">
-                                code connected wallet address here
+                                {shortenAddress(currentAccount)}
                             </p>
                             <p className="text-white font-semibold text-lg mt-1">
                                 Ethereum
