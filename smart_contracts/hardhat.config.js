@@ -9,6 +9,9 @@ if (process.env.REPORT_COVERAGE) {
   require('solidity-coverage');
 }
 
+const ALCHEMY_API_KEY = "";
+const GOERLI_PRIVATE_KEY = "";
+
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
@@ -21,6 +24,12 @@ module.exports = {
         runs: 800,
       },
     },
+  },
+  networks: {
+    goerli: {
+      url: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+      accounts: [`${GOERLI_PRIVATE_KEY}`]
+    }
   },
   gasReporter: {
     currency: 'USD',
