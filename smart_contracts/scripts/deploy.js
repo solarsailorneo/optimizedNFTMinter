@@ -1,12 +1,12 @@
 const hre = require("hardhat");
 
 const main = async () => {
-    Erc721a = await hre.ethers.getContractFactory("MyNFTMinter");
-    erc721a = await Erc721a.deploy("erc721aSample", "721A");
+  MyNFTMinter = await hre.ethers.getContractFactory("MyNFTMinter");
+  myNFTMinter = await MyNFTMinter.deploy("myNFTMinter", "721A");
 
-    await erc721a.deployed();
+    await myNFTMinter.deployed();
 
-    console.log("ERC721a deployed to: ", erc721a.address);
+    console.log("MyNFTMinter deployed to: ", myNFTMinter.address);
 }
 
 main()
