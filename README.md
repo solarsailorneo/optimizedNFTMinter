@@ -1,4 +1,4 @@
-# optimized NFT Minter
+# Optimized NFT Minter
 For this project, I am using an ERC-721a token.
 
 ## Goals
