@@ -21,6 +21,7 @@ const getEthereumContract = () => {
 export const ERC721aProvider = ({ children }) => {
     const [currentAccount, setCurrentAccount] = useState('');
     const [formData, setFormData] = useState({quantity: '', baseURI: ''});
+    const [allMints, setAllMints] = useState([]);
 
     const handleChange = (e, name) => {
         setFormData((prevState) => ({ ...prevState, [name]: e.target.value }));
@@ -36,7 +37,7 @@ export const ERC721aProvider = ({ children }) => {
             {
                 setCurrentAccount(accounts[0]);
                 console.log('Succesfully connected');
-                // getAllTransactions
+                getAllMints();
             }
             else{
                 console.log('No accounts found');
@@ -50,6 +51,45 @@ export const ERC721aProvider = ({ children }) => {
 
         } 
 
+    }
+
+    const checkIfTransactionExists = async () => {
+        try {
+            const erc721aContract = getEthereumContract();
+        }
+        catch (error) {
+
+        }
+    }
+
+    const getAllMints = async () => {
+        try {
+            if(!ethereum) return alert("Please install metamask");
+            
+            let listOfOwners = [];
+
+            const erc721aContract = getEthereumContract();
+            const allMints = await erc721aContract.totalSupply();
+            const totalSupply = allMints.toNumber();
+            // console.log(totalSupply);
+            for(let i = 0; i < totalSupply; ++i)
+            {
+                const walletAddress = await erc721aContract.ownerOf(BigNumber.from(i));
+                listOfOwners.push(walletAddress);
+            }
+
+            const structuredMints = listOfOwners.map((mint) => ({
+                mintAddress: mint
+            }));
+
+            console.log(structuredMints);
+            setAllMints(structuredMints);
+                
+
+        }
+        catch (error) {
+            console.log(error)
+        }
     }
 
     const connectWallet = async () => {
@@ -112,7 +152,7 @@ export const ERC721aProvider = ({ children }) => {
     }, [currentAccount]);
     
     return (
-        <ERC721aContext.Provider value={{ connectWallet, currentAccount, formData, setFormData, handleChange, sendMint }}>
+        <ERC721aContext.Provider value={{ connectWallet, currentAccount, formData, setFormData, handleChange, sendMint, allMints }}>
             {children}
         </ERC721aContext.Provider>
     );
