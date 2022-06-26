@@ -12,7 +12,6 @@ const getEthereumContract = () => {
     const signer = provider.getSigner();
     const ERC721aContract = new ethers.Contract(contractAddress, contractABI, signer);
 
-    console.log(ERC721aContract);
     return ERC721aContract;
 }
 
@@ -22,6 +21,7 @@ export const ERC721aProvider = ({ children }) => {
     const [currentAccount, setCurrentAccount] = useState('');
     const [formData, setFormData] = useState({quantity: '', baseURI: ''});
     const [allMints, setAllMints] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e, name) => {
         setFormData((prevState) => ({ ...prevState, [name]: e.target.value }));
@@ -71,7 +71,7 @@ export const ERC721aProvider = ({ children }) => {
             const erc721aContract = getEthereumContract();
             const allMints = await erc721aContract.totalSupply();
             const totalSupply = allMints.toNumber();
-            // console.log(totalSupply);
+
             for(let i = 0; i < totalSupply; ++i)
             {
                 const walletAddress = await erc721aContract.ownerOf(BigNumber.from(i));
@@ -82,7 +82,6 @@ export const ERC721aProvider = ({ children }) => {
                 mintAddress: mint
             }));
 
-            console.log(structuredMints);
             setAllMints(structuredMints);
                 
 
@@ -115,28 +114,30 @@ export const ERC721aProvider = ({ children }) => {
 
             // get data from form
             const { quantity, baseURI } = formData;
-            console.log(quantity);
+
             const erc721aContract = getEthereumContract();
 
-            // await ethereum.request({
-            //     method: 'mint',
-            //     params: [{
-            //         quantity: quantity,
-            //         gas: '0x5208' // 21000 GWEI
-            //     }]
-            // });
+            setIsLoading(true);
 
-            const transactionHash1 = await erc721aContract.setBaseURI(baseURI.toString());
+            if(baseURI.toString().length > 0)
+            {
+                const transactionHash1 = await erc721aContract.setBaseURI(baseURI.toString());
+
+                console.log(`Loading - ${transactionHash1.hash}`);
+                await transactionHash1.wait();
+            }
+            
+
+
+
+
             const transactionHash2 = await erc721aContract.mint(BigNumber.from(quantity));
-            // const transactionHash2 = await erc721aContract.mint(BigNumber.from(quantity), {value: ethers.utils.parseEther(quantity * 0.02).toString()});
-            // const transactionHash3 = await erc721aContract.totalSupply();
 
-            console.log(transactionHash1);
-            console.log(transactionHash2);
-            // console.log(transactionHash3);
+            console.log(`Loading - ${transactionHash2.hash}`);
+            await transactionHash2.wait();
 
-            // const transactionHash3 = await erc721aContract.totalSupply();
-            // console.log(transactionHash3);
+            console.log(`Success - ${transactionHash2.hash}`);
+            setIsLoading(false);
 
         }
         catch (error) {
@@ -152,7 +153,7 @@ export const ERC721aProvider = ({ children }) => {
     }, [currentAccount]);
     
     return (
-        <ERC721aContext.Provider value={{ connectWallet, currentAccount, formData, setFormData, handleChange, sendMint, allMints }}>
+        <ERC721aContext.Provider value={{ connectWallet, currentAccount, formData, setFormData, handleChange, sendMint, allMints, isLoading }}>
             {children}
         </ERC721aContext.Provider>
     );

@@ -6,7 +6,6 @@ import { shortenAddress } from '../utils/shortenAddress';
 const dummyData = [];
 
 const MintCard = ( { mintAddress } ) => {
-    console.log(mintAddress);
     
     return (
         <div className="bg-[#181918] m-4 flex flex-1 
