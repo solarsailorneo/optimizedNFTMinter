@@ -12,7 +12,6 @@ package-lock.json
 smart_contracts/package-lock.json
 smart_contracts/node_modules
 node_modules
-dist
 dist-ssr
 *.local
 
