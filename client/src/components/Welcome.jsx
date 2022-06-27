@@ -7,7 +7,7 @@ import { BsInfoCircle } from 'react-icons/bs';
 import { Loader } from './';
 import { shortenAddress } from '../utils/shortenAddress';
 
-const commonStyles = "min-h-[70px] sm:px-0 px-2 sm-min-w-[120px] flex justify-center items-center border-[0.5px] border-gradient"
+const commonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white"
 
 const Input = ({ placeholder, name, type, value, handleChange }) => (
     <input 
@@ -21,14 +21,15 @@ const Input = ({ placeholder, name, type, value, handleChange }) => (
 );
 
 const Welcome = () => {
-    const { connectWallet, currentAccount, formData, sendMint, handleChange  } = useContext(ERC721aContext);
+    const { connectWallet, currentAccount, formData, sendMint, handleChange, isLoading  } = useContext(ERC721aContext);
 
     const handleSubmit = (e) => {
         const { quantity, baseURI } = formData;
 
         e.preventDefault(); // prevents application from reloading. Can and should do this in react
-        console.log(baseURI);
-        if(!quantity || !baseURI) return;
+
+        // if(!quantity || !baseURI) return;
+        if(!quantity) return; // make URI change optional
 
         sendMint();
     }
@@ -79,7 +80,7 @@ const Welcome = () => {
                     
                     <div className="h-[1px] w-full bg-gray-400 my-2" />
                 
-                    {false ? (
+                    {isLoading ? (
                         <Loader />
                     ) : (
                         <button
